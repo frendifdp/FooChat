@@ -4,10 +4,16 @@ import signUp from './src/screens/signUp';
 
 const AppNavigator = createStackNavigator({
   	signIn: {
-    	screen: signIn,
+		screen: signIn,
+		navigationOptions : {
+			header: null
+		}
   	},
   	signUp: {
-    	screen: signUp,
+		screen: signUp,
+		navigationOptions : {
+			header: null
+		}
 	}
 });
 

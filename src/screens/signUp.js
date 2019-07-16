@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Picker, ActivityIndicator, Modal } from 'react-native';
+import { Image, Text, View, TextInput, TouchableOpacity, Picker, ActivityIndicator, Modal } from 'react-native';
+import styles from '../../assets/styles'
 
 export default class App extends Component {
 
@@ -10,16 +11,6 @@ export default class App extends Component {
             gender: 1,
             modalVisible: false
         }
-    }
-
-    static navigationOptions = {
-        title: 'Sign Up',
-        headerTitleStyle: {
-            marginLeft: -45
-        },
-        headerLeft: (
-            <View></View>
-        )
     }
     
     // handleNavigate = () => {
@@ -39,11 +30,16 @@ export default class App extends Component {
     // }
     onSubmit = () => {
         this.setState({modalVisible: true});
+        setTimeout(()=> {this.setState({modalVisible: false})}, 5000)
     }
 
     render() {
         return (
             <View style={{flex: 1,  justifyContent: 'center'}}>
+                <View style={{...styles.row, marginTop: -50}}>
+                    <Image style={{height: 125, width: 135}} source={require('../../assets/images/logo.png')}/>
+                    <Text style={{color: 'black', fontWeight: 'bold', fontSize: 35, marginTop: 20}}>FooChat</Text>
+                </View>
                 <View style={styles.row}>
                     <TextInput style={styles.input} placeholder="Username"/>
                     <TextInput style={styles.input} placeholder="Email"/>
@@ -60,11 +56,11 @@ export default class App extends Component {
                     <TextInput style={styles.input} placeholder="Password"/>
                 </View>
                 <View style={styles.row}>
-                    <TouchableOpacity style={styles.button} onPress={this.onSubmit}>
+                    <TouchableOpacity style={{...styles.button, backgroundColor: 'blue'}} onPress={this.onSubmit}>
                         <Text style={{color: 'white'}}>Sign Up</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{marginTop: 20}} onPress={() => {this.props.navigation.navigate('signIn')}}>
-                        <Text style={{color: 'green'}}>Sign In</Text>
+                    <TouchableOpacity style={{...styles.button, backgroundColor: 'green', marginTop: 20}} onPress={() => {this.props.navigation.navigate('signIn')}}>
+                        <Text style={{color: 'white'}}>Sign In</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -85,39 +81,3 @@ export default class App extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    row: {
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    input: {
-        borderBottomWidth: 1,
-        borderBottomColor: 'blue',
-        width: '95%'
-    },
-    button : {
-        marginTop: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '95%',
-        backgroundColor: 'blue',
-        height: 50,
-        borderRadius: 50
-    },
-    modal : {
-        height: '100%',
-        backgroundColor: '#00000050',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modalCont: {
-        backgroundColor: 'white',
-        width: 200,
-        height: 100,
-        borderRadius: 5,
-        elevation: 5,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});

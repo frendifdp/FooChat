@@ -1,6 +1,8 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
+import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
+import styles from '../../assets/styles'
+import Firebase from '../../config/firebaseCfg';
 
 export default class App extends Component {
 
@@ -8,36 +10,45 @@ export default class App extends Component {
         super();
         this.state = {
             modalVisible: false,
-        }
-    }
-
-    static navigationOptions = {
-        title: 'Sign In',
-        headerTitleStyle: {
-            marginLeft: 10
+            email : '',
+            password : ''
         }
     }
 
     componentDidMount = () => {
     }
     
-    onSubmit = () => {
+    onSubmit = async () => {
         this.setState({modalVisible: true});
+        await Firebase.auth()
+          .signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(this.setState({modalVisible: false}));
+
     }
+
+    // login = async(user, success_callback, failed_callback) => {
+    //     await firebase.auth()
+    //       .signInWithEmailAndPassword(user.email, user.password)
+    //     .then(success_callback, failed_callback);
+    //  }
 
     render() {
         return (
             <View style={{flex: 1, justifyContent: 'center'}}>
-                <View style={styles.row}>
-                    <TextInput style={styles.input} placeholder="Username"/>
-                    <TextInput style={styles.input} placeholder="Password"/>
+                <View style={{...styles.row, marginTop: -150}}>
+                    <Image style={{height: 125, width: 135}} source={require('../../assets/images/logo.png')}/>
+                    <Text style={{color: 'black', fontWeight: 'bold', fontSize: 35, marginTop: 20}}>FooChat</Text>
                 </View>
                 <View style={styles.row}>
-                    <TouchableOpacity style={styles.button} onPress={this.onSubmit}>
+                    <TextInput onChangeText={(value) => {this.setState({email: value})}} style={styles.input} placeholder="Email"/>
+                    <TextInput onChangeText={(value) => {this.setState({password: value})}} style={styles.input} placeholder="Password"/>
+                </View>
+                <View style={styles.row}>
+                    <TouchableOpacity style={{...styles.button, backgroundColor: 'green'}} onPress={this.onSubmit}>
                         <Text style={{color: 'white'}}>Sign In</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{marginTop: 20}} onPress={() => {this.props.navigation.navigate('signUp')}}>
-                        <Text style={{color: 'blue'}}>Sign Up</Text>
+                    <TouchableOpacity style={{...styles.button, backgroundColor: 'blue', marginTop: 20}} onPress={() => {this.props.navigation.navigate('signUp')}}>
+                        <Text style={{color: 'white'}}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -57,39 +68,3 @@ export default class App extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    row: {
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    input: {
-        borderBottomWidth: 1,
-        borderBottomColor: 'green',
-        width: '95%'
-    },
-    button : {
-        marginTop: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '95%',
-        backgroundColor: 'green',
-        height: 50,
-        borderRadius: 50
-    },
-    modal : {
-        height: '100%',
-        backgroundColor: '#00000050',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modalCont: {
-        backgroundColor: 'white',
-        width: 200,
-        height: 100,
-        borderRadius: 5,
-        elevation: 5,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});

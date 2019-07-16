@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Image, Text, View, TextInput, TouchableOpacity, Picker, ActivityIndicator, Modal } from 'react-native';
 import styles from '../../assets/styles'
+import firebaseSvc from '../components/firebaseSvc';
 
 export default class App extends Component {
 
@@ -9,7 +10,10 @@ export default class App extends Component {
         super();
         this.state = {
             gender: 1,
-            modalVisible: false
+            modalVisible: false,
+            email : '',
+            password : '',
+            username: ''
         }
     }
     componentDidMount = () => {
@@ -17,13 +21,17 @@ export default class App extends Component {
     // componentWillUnmount = () => {
     //   clearTimeout();
     // }
-    onSubmit = () => {
+    onSubmit = async () => {
         this.setState({modalVisible: true})
         const user = {
             email: this.state.email,
             password: this.state.password,
+            username: this.state.username
         };
         firebaseSvc.signUp(user);
+        setTimeout(() => {
+            this.setState({modalVisible: false})
+        }, 2000)
     }
 
     render() {
@@ -34,8 +42,8 @@ export default class App extends Component {
                     <Text style={{color: 'black', fontWeight: 'bold', fontSize: 35, marginTop: 20}}>FooChat</Text>
                 </View>
                 <View style={styles.row}>
-                    <TextInput style={styles.input} placeholder="Username"/>
-                    <TextInput style={styles.input} placeholder="Email"/>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({username: value})}} placeholder="Username"/>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({email: value})}} placeholder="Email"/>
                     <Picker
                         style={{width: '100%', height: 50}}
                         selectedValue={this.state.gender}
@@ -46,7 +54,7 @@ export default class App extends Component {
                         <Picker.Item label="Male" value={1}/>
                         <Picker.Item label="Female" value={2}/>
                     </Picker>
-                    <TextInput style={styles.input} placeholder="Password"/>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} placeholder="Password"/>
                 </View>
                 <View style={styles.row}>
                     <TouchableOpacity style={{...styles.button, backgroundColor: 'blue'}} onPress={this.onSubmit}>

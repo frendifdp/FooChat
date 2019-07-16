@@ -16,7 +16,7 @@ class FirebaseSvc {
     }
 
     signUp = async (user) => {
-        firebase
+        await firebase
             .auth()
             .createUserWithEmailAndPassword(user.email, user.password)
             .then(
@@ -41,7 +41,6 @@ class FirebaseSvc {
                 );
             },
             function(error) {
-                console.error('got error:' + typeof error + ' string:' + error.message);
                 alert('Create account failed. Error: ' + error.message);
             }
         );

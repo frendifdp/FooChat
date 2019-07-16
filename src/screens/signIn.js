@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
-import styles from '../../assets/styles'
-import Firebase from '../../config/firebaseCfg';
+import styles from '../../assets/styles';
+import firebaseSvc from '../components/firebaseSvc';
 
 export default class App extends Component {
 
@@ -19,18 +19,30 @@ export default class App extends Component {
     }
     
     onSubmit = async () => {
-        this.setState({modalVisible: true});
-        await Firebase.auth()
-          .signInWithEmailAndPassword(this.state.email, this.state.password)
-        .then(this.setState({modalVisible: false}));
-
+        this.setState({modalVisible: true})
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+        };
+        firebaseSvc.signIn(user, this.loginSuccess, this.loginFailed);
     }
 
-    // login = async(user, success_callback, failed_callback) => {
-    //     await firebase.auth()
-    //       .signInWithEmailAndPassword(user.email, user.password)
-    //     .then(success_callback, failed_callback);
-    //  }
+    loginSuccess = () => {
+        setTimeout(() => {
+            console.warn('login successful, navigate to chat.')
+            this.setState({modalVisible: false})
+        }, 500)
+        // this.props.navigation.navigate('Chat', {
+        //   name: this.state.name,
+        //   email: this.state.email,
+        // });
+    };
+    loginFailed = () => {
+        setTimeout(() => {
+            alert('Login failure. Please tried again.')
+            this.setState({modalVisible: false})
+        }, 500)
+    };
 
     render() {
         return (
@@ -57,7 +69,7 @@ export default class App extends Component {
                 transparent={true}
                 visible={this.state.modalVisible}
                 >
-                    <TouchableOpacity style={styles.modal} onPress={() => {this.setState({modalVisible: false})}}>
+                    <TouchableOpacity style={styles.modal}>
                         <View style={styles.modalCont}>
                             <Text style={{marginBottom: 20}}>Processing</Text>
                             <ActivityIndicator size="large" color="green" />

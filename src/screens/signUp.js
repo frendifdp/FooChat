@@ -12,25 +12,18 @@ export default class App extends Component {
             modalVisible: false
         }
     }
-    
-    // handleNavigate = () => {
-    //     const { navigation } = this.props;
-    //     navigation.navigate('Note')
-    // }
     componentDidMount = () => {
-        // setInterval(() => {
-        //     let count = this.state.counter;
-        //     this.setState({
-        //         counter: count + 1,
-        //     })
-        // }, 1000)
     }
     // componentWillUnmount = () => {
     //   clearTimeout();
     // }
     onSubmit = () => {
-        this.setState({modalVisible: true});
-        setTimeout(()=> {this.setState({modalVisible: false})}, 5000)
+        this.setState({modalVisible: true})
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+        };
+        firebaseSvc.signUp(user);
     }
 
     render() {
@@ -69,7 +62,7 @@ export default class App extends Component {
                 transparent={true}
                 visible={this.state.modalVisible}
                 >
-                    <TouchableOpacity style={styles.modal} onPress={() => {this.setState({modalVisible: false})}}>
+                    <TouchableOpacity style={styles.modal}>
                         <View style={styles.modalCont}>
                             <Text style={{marginBottom: 20}}>Processing</Text>
                             <ActivityIndicator size="large" color="green" />

@@ -10,6 +10,8 @@ export default class Chat extends React.Component {
             person: props.navigation.getParam("name"),
             uid: props.navigation.getParam("uid"),
             myUid: '',
+            myName: '',
+            myAvatar: '',
             text: '',
             messagesList: []
         }
@@ -22,7 +24,11 @@ export default class Chat extends React.Component {
     }
     
     componentDidMount = async () => {
-        this.setState({myUid: await AsyncStorage.getItem('myUid')})
+        this.setState({
+            myUid: await AsyncStorage.getItem('myUid'),
+            myName: await AsyncStorage.getItem('myName'),
+            myAvatar: await AsyncStorage.getItem('myAvatar')
+        })
         firebase.database().ref('messages').child(this.state.myUid).child(this.state.uid).on('child_added', (val)=>{
             this.setState((prevState)=>{
                 return {
@@ -30,9 +36,6 @@ export default class Chat extends React.Component {
                 }
             })
         })
-        setTimeout(()=>{
-            console.warn(this.state.messageList)
-        }, 5000)
     }
 
     
@@ -41,20 +44,16 @@ export default class Chat extends React.Component {
         if(this.state.text.length > 0){
             let msgId = firebase.database().ref('messages').child(this.state.myUid).child(this.state.uid).push().key;
             let updates = {};
-            let message = //{
-                // message: this.state.text,
-                // time: firebase.database.ServerValue.TIMESTAMP,
-                // from: this.state.myUid //user uid
-                {
-                    _id: msgId,
-                    text: this.state.text,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    user: {
-                        _id: this.state.myUid,
-                        name: this.state.myUid,
-                    },
-                }
-            //}
+            let message = {
+                _id: msgId,
+                text: this.state.text,
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                user: {
+                    _id: this.state.myUid,
+                    name: this.state.myName,
+                    avatar: this.state.myAvatar
+                },
+            }
             updates["messages/" + this.state.myUid + '/' + this.state.uid + '/' + msgId] = message;
             updates["messages/" + this.state.uid + '/' + this.state.myUid + '/' + msgId] = message;
             firebase.database().ref().update(updates);
@@ -72,7 +71,11 @@ export default class Chat extends React.Component {
             <GiftedChat
                 text={this.state.text}
                 messages={this.state.messagesList}
-                user={{_id : this.state.myUid, name: this.state.myUid}}
+                user={{
+                    _id : this.state.myUid,
+                    name: this.state.myName,
+                    avatar: this.state.myAvatar
+                }}
                 onInputTextChanged={(text) => {this.setState({text: text})}}
                 onSend={this.sendMessage}
             />

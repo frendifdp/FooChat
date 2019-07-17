@@ -12,7 +12,8 @@ export default class App extends Component {
             modalVisible: false,
             email : '',
             password : '',
-            username: ''
+            username: '',
+            avatar: ''
         }
     }
     componentDidMount = () => {
@@ -25,7 +26,8 @@ export default class App extends Component {
         const user = {
             email: this.state.email,
             password: this.state.password,
-            name: this.state.username
+            name: this.state.username,
+            avatar: this.state.avatar
         };
         await firebaseSvc.signUp(user);
         this.setState({modalVisible: false})
@@ -40,6 +42,7 @@ export default class App extends Component {
                     <Text style={{color: 'black', fontWeight: 'bold', fontSize: 35, marginTop: 20}}>FooChat</Text>
                 </View>
                 <View style={styles.row}>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({avatar: value})}} placeholder="Image Url"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({username: value})}} placeholder="Username"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({email: value})}} placeholder="Email"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} placeholder="Password"/>

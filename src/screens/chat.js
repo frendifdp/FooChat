@@ -72,9 +72,7 @@ export default class Chat extends React.Component {
                 text={this.state.text}
                 messages={this.state.messagesList}
                 user={{
-                    _id : this.state.myUid,
-                    name: this.state.myName,
-                    avatar: this.state.myAvatar
+                    _id : this.state.myUid
                 }}
                 onInputTextChanged={(text) => {this.setState({text: text})}}
                 onSend={this.sendMessage}

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { AsyncStorage, Text, View, TextInput, TouchableOpacity, FlatList, ActivityIndicator, Modal } from 'react-native';
-//import firebaseSvc from '../components/firebaseSvc';
 import firebase from 'firebase'
+import {createStackNavigator} from 'react-navigation';
+import myProfile from './myProfile';
+import chat from './chat';
 
-export default class App extends Component{
+class App extends Component{
     constructor() {
         super();
         this.state = {
@@ -11,7 +13,6 @@ export default class App extends Component{
             email : '',
             password : '', 
             users: [],
-            me: '',
             myUid: ''
         }
     }
@@ -25,15 +26,12 @@ export default class App extends Component{
     //     //this.props.navigation.navigate('signIn')
     // }
 
-    getFriend = async () => {
+    componentDidMount = async () => {
         this.setState({myUid: await AsyncStorage.getItem('myUid')})
         await firebase.database().ref('users/').on('child_added', (value) =>{
             let person = value.val()
             person.uid = value.key
-            if(person.uid === this.state.myUid){
-                // this.setState({me: person.name})
-            }
-            else{
+            if(person.uid !== this.state.myUid){
                 this.setState((prevState) => {
                     return {
                         users: [...prevState.users, person]
@@ -41,15 +39,6 @@ export default class App extends Component{
                 })
             }
         });
-    }
-
-    componentDidMount = async () => {
-        await this.getFriend;
-		this.subs = [
-			this.props.navigation.addListener('willFocus', () => {
-				await this.getFriend
-			})
-		]
     }
 
     renderItem = ({item}) => (
@@ -79,6 +68,8 @@ export default class App extends Component{
                         data={this.state.users}
                         renderItem={this.renderItem}
                         keyExtractor={(item) => item.uid}
+                        refreshing={true}
+                        onRefresh={this.componentWillMount}
                     />
                 </View>
             </View>
@@ -102,3 +93,20 @@ const styles = {
         backgroundColor: 'white'
     }
 }
+
+const AppNavigator = createStackNavigator({
+    friendList: {
+        screen: App,
+        navigationOptions : {
+			header: null
+		}
+    },
+    chat: {
+        screen: chat
+    },
+    myProfile: {
+        screen: myProfile
+    }
+});
+
+export default AppNavigator;

@@ -1,10 +1,12 @@
 
 import React, { Component } from 'react';
 import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal, AsyncStorage } from 'react-native';
+import {createStackNavigator} from 'react-navigation';
 import styles from '../../assets/styles';
 import firebaseSvc from '../components/firebaseSvc';
+import friendList from './friendList';
 
-export default class App extends Component {
+class App extends Component {
 
     constructor() {
         super();
@@ -77,3 +79,18 @@ export default class App extends Component {
         );
     }
 }
+
+
+const AppNavigator = createStackNavigator({
+    signIn: {
+        screen: App
+    },
+    friendList: {
+        screen: friendList,
+        navigationOptions : {
+			header: null
+		}
+    }
+});
+
+export default AppNavigator;

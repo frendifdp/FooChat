@@ -10,7 +10,7 @@ export default class App extends Component {
         }
     }
 
-    navigate = async () => {
+    componentDidMount = async () => {
         const myUid = await AsyncStorage.getItem('myUid')
         setTimeout(()=>{
             if(myUid !== null){
@@ -20,15 +20,6 @@ export default class App extends Component {
                 this.props.navigation.navigate('signIn')
             }
         }, 2500)
-    }
-
-    componentDidMount = async () => {
-        await this.navigate;
-		this.subs = [
-			this.props.navigation.addListener('willFocus', () => {
-				await this.navigate
-			})
-		]
     }
 
     render() {

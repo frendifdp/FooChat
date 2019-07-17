@@ -1,6 +1,8 @@
 //require('dotenv').config();
 import firebase from 'firebase';
 import config from '../../config/firebaseConfig'
+import { AsyncStorage } from 'react-native';
+
 class FirebaseSvc {
     constructor() {
         if (!firebase.apps.length) {
@@ -12,7 +14,7 @@ class FirebaseSvc {
         await firebase.auth()
             .signInWithEmailAndPassword(user.email, user.password)
         .then(success_callback, failed_callback);
-        
+        await AsyncStorage.setItem('myUid', firebase.auth().currentUser.uid);
     }
 
     signUp = async (user) => {
@@ -30,10 +32,12 @@ class FirebaseSvc {
                 var userf = firebase.auth().currentUser;
                 userf.updateProfile({ displayName: user.name }).then(
                     function() {
+                        
                         console.log('Updated displayName successfully. name:' + user.name);
                         alert(
                             'User ' + user.name + ' was created successfully. Please login.'
                         );
+                        firebase.database().ref('users/' + userf.uid).set({...user});
                     },
                     function(error) {
                         console.warn('Error update displayName.');

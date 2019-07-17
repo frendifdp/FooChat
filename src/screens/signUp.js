@@ -9,7 +9,6 @@ export default class App extends Component {
     constructor() {
         super();
         this.state = {
-            gender: 1,
             modalVisible: false,
             email : '',
             password : '',
@@ -26,12 +25,11 @@ export default class App extends Component {
         const user = {
             email: this.state.email,
             password: this.state.password,
-            username: this.state.username
+            name: this.state.username
         };
-        firebaseSvc.signUp(user);
-        setTimeout(() => {
-            this.setState({modalVisible: false})
-        }, 2000)
+        await firebaseSvc.signUp(user);
+        this.setState({modalVisible: false})
+        this.props.navigation.navigate('signIn');
     }
 
     render() {
@@ -44,16 +42,6 @@ export default class App extends Component {
                 <View style={styles.row}>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({username: value})}} placeholder="Username"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({email: value})}} placeholder="Email"/>
-                    <Picker
-                        style={{width: '100%', height: 50}}
-                        selectedValue={this.state.gender}
-                        onValueChange={(value, key) =>
-							this.setState({gender: value})
-						}
-                    >
-                        <Picker.Item label="Male" value={1}/>
-                        <Picker.Item label="Female" value={2}/>
-                    </Picker>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} placeholder="Password"/>
                 </View>
                 <View style={styles.row}>

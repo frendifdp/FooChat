@@ -60,3 +60,4 @@ buck-out/
 .env
 .firebaserc
 config/firebaseConfig.js
+.vscode

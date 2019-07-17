@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
+import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal, AsyncStorage } from 'react-native';
 import styles from '../../assets/styles';
 import firebaseSvc from '../components/firebaseSvc';
 
@@ -15,7 +15,11 @@ export default class App extends Component {
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        const myUid = await AsyncStorage.getItem('myUid')
+        if(myUid !== null){
+            this.props.navigation.navigate('friendList')
+        }
     }
     
     onSubmit = async () => {
@@ -24,24 +28,17 @@ export default class App extends Component {
             email: this.state.email,
             password: this.state.password,
         };
-        firebaseSvc.signIn(user, this.loginSuccess, this.loginFailed);
+        await firebaseSvc.signIn(user, this.loginSuccess, this.loginFailed);
     }
 
     loginSuccess = () => {
-        setTimeout(() => {
-            console.warn('login successful, navigate to chat.')
-            this.setState({modalVisible: false})
-        }, 500)
-        // this.props.navigation.navigate('Chat', {
-        //   name: this.state.name,
-        //   email: this.state.email,
-        // });
+        console.warn('login successful, navigate to chat.')
+        this.setState({modalVisible: false})
+        this.props.navigation.navigate('friendList');
     };
     loginFailed = () => {
-        setTimeout(() => {
-            alert('Login failure. Please tried again.')
-            this.setState({modalVisible: false})
-        }, 500)
+        alert('Login failure. Please tried again.')
+        this.setState({modalVisible: false})
     };
 
     render() {

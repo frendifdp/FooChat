@@ -45,7 +45,9 @@ export default class App extends Component {
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({avatar: value})}} placeholder="Image Url"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({username: value})}} placeholder="Username"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({email: value})}} placeholder="Email"/>
-                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} placeholder="Password"/>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} 
+                    secureTextEntry={true}
+                    placeholder="Password"/>
                 </View>
                 <View style={styles.row}>
                     <TouchableOpacity style={{...styles.button, backgroundColor: 'blue'}} onPress={this.onSubmit}>

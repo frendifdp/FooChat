@@ -2,6 +2,7 @@
 import firebase from 'firebase';
 import config from '../../config/firebaseConfig'
 import { AsyncStorage } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 
 class FirebaseSvc {
     constructor() {
@@ -10,14 +11,33 @@ class FirebaseSvc {
         }
     }
 
+    getLocation = () => {
+        Geolocation.getCurrentPosition(info => {
+            this.setState({
+                latitude: info.coords.latitude,
+                longitude: info.coords.longitude
+            })
+        })
+    }
+
     signIn = async (user, success_callback, failed_callback) => {
         await firebase.auth()
             .signInWithEmailAndPassword(user.email, user.password)
             .then(success_callback, failed_callback);
         let userf = firebase.auth().currentUser;
+        const updates = {}
         await AsyncStorage.setItem('myUid', userf.uid);
         await AsyncStorage.setItem('myName', userf.displayName);
         await AsyncStorage.setItem('myAvatar', userf.photoURL);
+        Geolocation.getCurrentPosition(info => {
+            updates['users/' + userf.uid + '/' + 'longitude'] = info.coords.longitude;
+            updates['users/' + userf.uid + '/' + 'latitude'] = info.coords.longitude;
+            firebase.database().ref().update(updates);
+        }, err => {
+            console.log(err)
+        },
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+        )
     }
 
     signUp = async (user) => {
@@ -40,7 +60,18 @@ class FirebaseSvc {
                             alert(
                                 'User ' + user.name + ' was created successfully. Please login.'
                             );
-                            firebase.database().ref('users/' + userf.uid).set({name: user.name, avatar: user.avatar});
+                            Geolocation.getCurrentPosition(info => {
+                                firebase.database().ref('users/' + userf.uid).set({
+                                    name: user.name,
+                                    avatar: user.avatar,
+                                    longitude: info.coords.longitude,
+                                    latitude: info.coords.latitude
+                                });
+                            }, err => {
+                                console.log(err)
+                            },
+                            {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+                            )                            
                         },
                         function (error) {
                             console.warn('Error update displayName.');

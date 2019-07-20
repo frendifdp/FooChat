@@ -14,7 +14,7 @@ export default class App extends Component {
         const myUid = await AsyncStorage.getItem('myUid')
         setTimeout(()=>{
             if(myUid !== null){
-                this.props.navigation.navigate('friendList')
+                this.props.navigation.navigate('maps')
             }
             else{
                 this.props.navigation.navigate('signIn')

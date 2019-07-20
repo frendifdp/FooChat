@@ -19,7 +19,6 @@ export default class Chat extends React.Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: navigation.getParam("name", null),
-            headerLeft: null
         }
     }
     

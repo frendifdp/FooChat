@@ -4,7 +4,7 @@ import { Image, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Moda
 import {createStackNavigator} from 'react-navigation';
 import styles from '../../assets/styles';
 import firebaseSvc from '../components/firebaseSvc';
-import friendList from './friendList';
+import friendList from './userList';
 
 class App extends Component {
 
@@ -20,8 +20,13 @@ class App extends Component {
     componentDidMount = async () => {
         const myUid = await AsyncStorage.getItem('myUid')
         if(myUid !== null){
-            this.props.navigation.navigate('friendList')
+            this.props.navigation.navigate('maps')
         }
+        this.subs = [
+			this.props.navigation.addListener('willFocus', () => {
+				this.forceUpdate()
+			})
+		]
     }
     
     onSubmit = async () => {
@@ -33,11 +38,12 @@ class App extends Component {
         await firebaseSvc.signIn(user, this.loginSuccess, this.loginFailed);
     }
 
-    loginSuccess = () => {
+    loginSuccess = async () => {
         console.warn('login successful, navigate to chat.')
         this.setState({modalVisible: false})
-        this.props.navigation.navigate('friendList');
+        this.props.navigation.navigate('maps');
     };
+
     loginFailed = () => {
         alert('Login failure. Please tried again.')
         this.setState({modalVisible: false})
@@ -52,7 +58,8 @@ class App extends Component {
                 </View>
                 <View style={styles.row}>
                     <TextInput onChangeText={(value) => {this.setState({email: value})}} style={styles.input} placeholder="Email"/>
-                    <TextInput onChangeText={(value) => {this.setState({password: value})}} style={styles.input} placeholder="Password"/>
+                    <TextInput onChangeText={(value) => {this.setState({password: value})}}
+                    style={styles.input} secureTextEntry={true} placeholder="Password"/>
                 </View>
                 <View style={styles.row}>
                     <TouchableOpacity style={{...styles.button, backgroundColor: 'green'}} onPress={this.onSubmit}>
@@ -83,7 +90,10 @@ class App extends Component {
 
 const AppNavigator = createStackNavigator({
     signIn: {
-        screen: App
+        screen: App,
+        navigationOptions : {
+			header: null
+		}
     },
     friendList: {
         screen: friendList,

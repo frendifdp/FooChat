@@ -3,6 +3,7 @@ import signIn from './src/screens/signIn';
 import signUp from './src/screens/signUp';
 import chat from './src/screens/chat';
 import splash from './src/screens/splash';
+import maps from './src/screens/maps';
 
 const AppNavigator = createStackNavigator({
 	splash: {
@@ -22,8 +23,16 @@ const AppNavigator = createStackNavigator({
 		navigationOptions : {
 			header: null
 		}
+	},
+	// chat: {
+	// 	screen: chat
+	// },
+	maps: {
+		screen: maps,
+		navigationOptions: {
+			header: null
+		}
 	}
 });
-
 const appContainer = createAppContainer(AppNavigator);
 export default appContainer;

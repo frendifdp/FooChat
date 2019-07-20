@@ -31,7 +31,7 @@ class FirebaseSvc {
         await AsyncStorage.setItem('myAvatar', userf.photoURL);
         Geolocation.getCurrentPosition(info => {
             updates['users/' + userf.uid + '/' + 'longitude'] = info.coords.longitude;
-            updates['users/' + userf.uid + '/' + 'latitude'] = info.coords.longitude;
+            updates['users/' + userf.uid + '/' + 'latitude'] = info.coords.latitude;
             firebase.database().ref().update(updates);
         }, err => {
             console.log(err)

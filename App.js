@@ -24,9 +24,6 @@ const AppNavigator = createStackNavigator({
 			header: null
 		}
 	},
-	// chat: {
-	// 	screen: chat
-	// },
 	maps: {
 		screen: maps,
 		navigationOptions: {
@@ -34,5 +31,6 @@ const AppNavigator = createStackNavigator({
 		}
 	}
 });
+console.disableYellowBox = true
 const appContainer = createAppContainer(AppNavigator);
 export default appContainer;

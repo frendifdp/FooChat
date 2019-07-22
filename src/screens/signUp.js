@@ -13,7 +13,8 @@ export default class App extends Component {
             email : '',
             password : '',
             username: '',
-            avatar: ''
+            avatar: 'https://i.pinimg.com/736x/01/62/9f/01629fbe235ff15dc51aadc37b879679.jpg',
+            phone: ''
         }
     }
     componentDidMount = () => {
@@ -27,7 +28,8 @@ export default class App extends Component {
             email: this.state.email,
             password: this.state.password,
             name: this.state.username,
-            avatar: this.state.avatar
+            avatar: this.state.avatar,
+            phone: this.state.phone
         };
         await firebaseSvc.signUp(user);
         this.setState({modalVisible: false})
@@ -45,6 +47,7 @@ export default class App extends Component {
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({avatar: value})}} placeholder="Image Url"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({username: value})}} placeholder="Username"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({email: value})}} placeholder="Email"/>
+                    <TextInput style={styles.input} onChangeText={(value) => {this.setState({phone: value})}} placeholder="Phone"/>
                     <TextInput style={styles.input} onChangeText={(value) => {this.setState({password: value})}} 
                     secureTextEntry={true}
                     placeholder="Password"/>

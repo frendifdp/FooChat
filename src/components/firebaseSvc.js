@@ -64,6 +64,8 @@ class FirebaseSvc {
                                 firebase.database().ref('users/' + userf.uid).set({
                                     name: user.name,
                                     avatar: user.avatar,
+                                    email: user.email,
+                                    phone: user.phone,
                                     longitude: info.coords.longitude,
                                     latitude: info.coords.latitude
                                 });
